@@ -13,14 +13,14 @@
 		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 	<meta name="description" content="A multiplayer modding platform for simplistic top-down 2d tank games.">
 	<meta name="robots" content="index, follow">
-	<meta property="og:image" content="./resources/favicon-66x66-k.png" />
+	<meta property="og:image" content=".Woomy-arras/resources/favicon-66x66-k.png" />
 	<meta property="og:image:width" content="52" />
 	<meta property="og:image:height" content="52" />
 	<!-- Favicons -->
-	<link rel="icon" type="image/png" sizes="192x192" href="./resources/favicon-66x66-k.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="./resources/favicon-66x66-k.png">
-	<link rel="icon" type="image/png" sizes="96x96" href="./resources/favicon-66x66-k.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="./resources/favicon-66x66-k.png">
+	<link rel="icon" type="image/png" sizes="192x192" href=".Woomy-arras/resources/favicon-66x66-k.png">
+	<link rel="icon" type="image/png" sizes="32x32" href=".Woomy-arras/resources/favicon-66x66-k.png">
+	<link rel="icon" type="image/png" sizes="96x96" href=".Woomy-arras/resources/favicon-66x66-k.png">
+	<link rel="icon" type="image/png" sizes="16x16" href=".Woomy-arras/resources/favicon-66x66-k.png">
 	<meta name="theme-color" content="#8ABC3F">
 
 	<script src="/js/extLib/peerjs.min.js"></script>
@@ -86,7 +86,7 @@
 				const filePaths = await (await fetch("/api/getJsFileList")).json();
 
 				await Promise.all(
-					filePaths.map(path => loadModule(`/js/${path.replaceAll("\\", "/")}`))
+					filePaths.map(path => loadModule(`Woomy-arras/js/${path.replaceAll("\\", "/")}`))
 				);
 				console.log("All modules pre-loaded successfully.");
 				loadingMenu.remove();
@@ -172,9 +172,9 @@
 					<h2>Settings:</h2>
 					<p class="joinRoomSetting">Max Players: <input autocomplete="false" type="number" value="99" min="1" class="joinRoomSettingInput" id="roomInfoSettingsMaxPlayerInput"></p>
 					<p class="joinRoomSetting">Bot Amount: <input autocomplete="false" type="number" value="20" min="0" class="joinRoomSettingInput" id="roomInfoSettingsMaxBotsInput"></p>
-					<h2 style="display: none;">Mods:</h2>
-					<div class="joinRoomModList" style="display: none;">
-						<div id="modListTemplate" class="modListEntry" style="display: none;">
+					<h2 style="display: block;">Mods:</h2>
+					<div class="joinRoomModList" style="display: block;">
+						<div id="modListTemplate" class="modListEntry" style="display: block;">
 							<div class="modListHeader">
 								<img alt="Mod Image">
 								<h2>Mod Name</h2>
@@ -200,7 +200,7 @@
 					</div>
 				</div>
 				<div class="joinEntryHolder shadowScroll">
-					<div id="joinEntryGalleryTemplate" class="gameEntryGallery" style="display: none;">
+					<div id="joinEntryGalleryTemplate" class="gameEntryGallery" style="display: block;">
 						<div class="gameEntryGalleryText">
 							<h2>Gamemode</h2>
 							<p>0 Players</p>
@@ -208,7 +208,7 @@
 						</div>
 					</div>
 
-					<div id="joinEntryListTemplate" class="gameEntryList" style="display: none;">
+					<div id="joinEntryListTemplate" class="gameEntryList" style="display: block;">
 						<div class="gameEntryListText">
 							<h2>Gamemode</h2>
 							<p>0 Players</p>
@@ -239,7 +239,7 @@
 						<button id="controlsButton">Controls</button>
 						<button id="achievementsButton">Achievements</button>
 						<!-- Hidden untill implementation -->
-						<button id="modBrowserButton" style="display: none;">Mod Browser</button>
+						<button id="modBrowserButton" style="display: block;">Mod Browser</button>
 						<!---->
 						<button id="historyAndCreditsButton">History & Credits</button>
 						<button id="wikiButton">Fan-made Wiki</button>
