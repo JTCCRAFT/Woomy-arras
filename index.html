@@ -1,81 +1,114 @@
 <!doctype html>
 <html lang="en" id="mainBody">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nabla&family=Rubik+80s+Fade&family=Alfa+Slab+One&family=Bebas+Neue&family=Bungee&family=Cutive+Mono&family=Dancing+Script:wght@500&family=Fredoka+One&family=Indie+Flower&family=Merienda&family=Nanum+Brush+Script&family=Neonderthaw&family=Pacifico&family=Passion+One&family=Permanent+Marker&family=Rampart+One&family=Roboto+Mono:wght@500&family=Share+Tech+Mono&family=Syne+Mono&family=Ubuntu:wght@400;700&family=Zen+Dots&display=swap" rel="stylesheet">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Woomy Online</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Nabla&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+	<meta property="og:image" content="./resources/favicon-66x66-k.png" />
+	<link rel="icon" type="image/png" sizes="192x192" href="./resources/favicon-66x66-k.png">
 	
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	
-	<link rel="icon" type="image/png" href="resources/favicon-66x66-k.png">
-	<link rel="stylesheet" href="menu.css">
-
 	<script src="js/extLib/peerjs.min.js"></script>
+	<link rel="stylesheet" href="./menu.css">
 </head>
 
 <body oncontextmenu="return false;" id="mainBody">
 
-	<div id="loadingScreen" style="display:flex;position: absolute;z-index: 100000;background: black;color: white;width: 100%;height: 100%;justify-content: center;align-items: center;flex-direction: column;">
+	<div id="loadingScreen" style="display:flex;position: absolute;z-index: 100000;background: black;color: white;width: 100%;height: 100%;justify-content: center;flex-direction: column;">
 		<h1 id="loadingText" style="color:white;font-size:xxx-large;">Loading Files...</h1>
-		<h5 style="color:white;">Made with love by Drako Hyena</h5>
+		<h5 style="color:white;font-size:xx-small;">Made with love by Drako Hyena</h5>
 	</div>
 
 	<script>
-		// THIS IS THE JAVASCRIPT INSIDE YOUR HTML
-		let loadingMenu = document.getElementById("loadingScreen");
-		let loadingText = document.getElementById("loadingText");
-		
-		// MANUALLY LISTING YOUR FILES (GitHub needs this!)
-		const scripts = [
-			"js/global.js",
-			"js/util.js",
-			"js/config.js",
-			"js/colors.js",
-			"js/assets.js",
-			"js/drawing/canvas.js",
-			"js/drawing/gameDraw.js",
-			"js/drawing/drawEntity.js",
-			"js/socket.js",
-			"js/multiplayer.js",
-			"js/app.js"
+		let loadingMenu = document.getElementById("loadingScreen")
+		let loadingText = document.getElementById("loadingText")
+		let dotCounter = 0
+		let loadingMenuInterval = setInterval(() => {
+			dotCounter++
+			let text = "Loading Files...";
+			if (dotCounter === text.length) dotCounter = 0
+			let str = ""
+			for (let i = 0; i < text.length; i++) {
+				str += (dotCounter === i) ? `<i style="color:white;font-size:xxx-large;">${text[i]}</i>` : text[i]
+			}
+			loadingText.innerHTML = str
+		}, 100);
+
+		// RESTORED: Since /api/ doesn't exist, we list the files manually
+		const scriptsToLoad = [
+			"js/global.js", "js/util.js", "js/config.js", "js/colors.js",
+			"js/assets.js", "js/drawing/canvas.js", "js/drawing/gameDraw.js",
+			"js/drawing/drawEntity.js", "js/drawing/drawHealth.js", 
+			"js/drawing/scenes.js", "js/socket.js", "js/multiplayer.js",
+			"js/mainmenu.js", "js/joinMenu.js"
 		];
 
-		async function loadGame() {
+		(async () => {
 			try {
-				for (const src of scripts) {
+				// We load every core file manually instead of fetching an API list
+				for (const path of scriptsToLoad) {
 					await new Promise((resolve, reject) => {
-						const s = document.createElement('script');
-						s.src = src; // Relative path works on GitHub!
-						s.onload = resolve;
-						s.onerror = () => reject("Failed to load: " + src);
-						document.head.appendChild(s);
+						const script = document.createElement('script');
+						script.type = 'module';
+						script.src = path;
+						script.onload = resolve;
+						script.onerror = () => reject("Failed: " + path);
+						document.head.appendChild(script);
 					});
 				}
-				console.log("Success!");
+				
+				console.log("All modules pre-loaded successfully.");
 				loadingMenu.remove();
-			} catch (e) {
-				console.error(e);
-				loadingText.innerHTML = "Error: " + e;
+				clearInterval(loadingMenuInterval);
+				
+				// START THE GAME: Use relative path (./js/)
+				import("./js/app.js");
+
+			} catch (error) {
+				console.error("Module pre-loading failed:", error);
+				loadingText.innerHTML = "Error loading " + error;
 			}
-		}
-		loadGame();
+		})();
 	</script>
 
 	<div id="gameAreaWrapper">
 		<canvas id="gameCanvas" tabindex="1"></canvas>
+		<canvas id="vignetteCanvas" class="passThroughClick"></canvas>
+	</div>
+
+	<div class="popup" style="display: none;">
+		<h1>Title</h1>
+		<span>Message</span><br />
+		<div>
+			<button onclick="document.querySelector('.popup').style.display = 'none';">Close</button>
+		</div>
+	</div>
+
+	<div class="achievementsHolder" id="achievementsHolder">
+		<div id="achievementsClose" onclick="document.getElementsByClassName('achievementsHolder')[0].style.display = 'none'"></div>
+		<h1 id="achievementsHeader">Achievements</h1>
+		<hr>
+		<div id="achievementsDisplay" class="shadowScroll"></div>
+		<h1>Player Stats</h1>
+		<hr>
+		<table id="achievementsStatsTable"></table>
 	</div>
 
 	<div id="mainWrapper">
 		<div id="startMenuWrapper">
-			<center>
-				<img class="icon" src="resources/woomy-arras.io.png" alt="woomy" />
-				<h1>Woomy Online</h1>
-				<button id="startButton">Play</button>
-			</center>
+			<div id="startMenu">
+				<div class="startMenuHolder">
+					<center>
+						<a href="//woomy-site.glitch.me/" tabindex="-1"><img class="icon" src="./resources/woomy-arras.io.png" alt="woomy" /></a>
+					</center>
+					<h1>Woomy Online</h1>
+					<button id="startButton" tabindex="2">Play</button>
+				</div>
+                </div>
 		</div>
 	</div>
-
 </body>
 </html>
